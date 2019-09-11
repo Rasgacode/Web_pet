@@ -29,101 +29,86 @@ def set_pos_def(cursor):
 
 
 @database_common.connection_handler
-def creat_league_table_n_schedule(cursor, teams, schedule):
+def creat_league_table_n_schedule(cursor, teams, schedule, user_id):
     cursor.execute("""
-                    DROP TABLE IF EXISTS league_table;
-                                       
-                    CREATE TABLE league_table (
-                    team_name character varying(255) NOT NULL,
-                    played int DEFAULT 0,
-                    won int DEFAULT 0,
-                    drawn int DEFAULT 0,
-                    lost int DEFAULT 0,
-                    gf int DEFAULT 0,
-                    ga int DEFAULT 0,
-                    gd int DEFAULT 0,
-                    points int DEFAULT 0
-                    );
-                    """)
+                        DELETE FROM league_table
+                        WHERE user_id = %(user_id)s
+                        """, {'user_id': user_id})
     for item in teams:
         team = item['team_name']
         cursor.execute("""
-                        INSERT INTO league_table
-                        VALUES (%(team)s)
-                        """, {'team': team})
-    cursor.execute("""
-                        DROP TABLE IF EXISTS schedule;
-                        
-                        CREATE TABLE schedule (
-                        home character varying(255) NOT NULL,
-                        away character varying(255) NOT NULL,
-                        played character varying(255) NOT NULL DEFAULT 'no',
-                        home_goals int DEFAULT NULL,
-                        away_goals int DEFAULT NULL,
-                        scorers character varying(255) DEFAULT NULL,
-                        last character varying(255) DEFAULT 'notlast'
-                        );
-                        """)
+                        INSERT INTO league_table (user_id, team_name)
+                        VALUES (%(user_id)s, %(team)s)
+                        """, {'team': team, 'user_id': user_id})
+        cursor.execute("""
+                            DELETE FROM schedule
+                            WHERE user_id = %(user_id)s
+                            """, {'user_id': user_id})
     for home, aways in schedule.items():
         for team in aways:
             cursor.execute("""
-                            INSERT INTO schedule
-                            VALUES (%(home)s, %(team)s);
+                            INSERT INTO schedule (user_id, home, away)
+                            VALUES (%(user_id)s, %(home)s, %(team)s);
                             """, {'home': home,
-                                  'team': team})
+                                  'team': team,
+                                  'user_id': user_id})
 
 
 @database_common.connection_handler
-def get_league_table(cursor):
+def get_league_table(cursor, user_id):
     cursor.execute("""
-                    SELECT * FROM league_table
-                    """)
+                    SELECT team_name, played, won, drawn, lost, gf, ga, gd, points FROM league_table
+                    WHERE user_id = %(user_id)s
+                    """, {'user_id': user_id})
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def get_schedule(cursor):
+def get_schedule(cursor, user_id):
     cursor.execute("""
                     SELECT home, away FROM schedule
-                    WHERE played = 'no'
-                    """)
+                    WHERE played = 'no' AND user_id = %(user_id)s
+                    """, {'user_id': user_id})
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def set_played(cursor, last_round):
+def set_played(cursor, last_round, user_id):
     for team in last_round:
         home_team = team['home']
         away_team = team['away']
         cursor.execute("""
                         UPDATE schedule
                         SET played = 'yes'
-                        WHERE home = %(home_team)s and away = %(away_team)s
+                        WHERE home = %(home_team)s and away = %(away_team)s and user_id = %(user_id)s
                         """, {'home_team': home_team,
-                              'away_team': away_team})
+                              'away_team': away_team,
+                              'user_id': user_id})
 
 
 @database_common.connection_handler
-def set_last_round(cursor, next_round):
+def set_last_round(cursor, next_round, user_id):
     cursor.execute("""
                     UPDATE schedule
                     SET last = 'notlast'
-                    WHERE last = 'last'
-                    """)
+                    WHERE last = 'last' and user_id = %(user_id)s
+                    """, {'user_id': user_id})
     for team in next_round:
         home_team = team['home']
         away_team = team['away']
         cursor.execute("""
                         UPDATE schedule
                         SET last = 'last'
-                        WHERE home = %(home_team)s and away = %(away_team)s
-                        """, {'home_team': home_team, 'away_team': away_team})
+                        WHERE home = %(home_team)s and away = %(away_team)s and user_id = %(user_id)s
+                        """, {'home_team': home_team,
+                              'away_team': away_team,
+                              'user_id': user_id})
 
 
 @database_common.connection_handler
-def get_last_round(cursor):
+def get_last_round(cursor, user_id):
     cursor.execute("""
                     SELECT home, away, home_goals, away_goals FROM schedule
-                    WHERE last = 'last';
-                    """)
+                    WHERE last = 'last' and user_id = %(user_id)s;
+                    """, {'user_id': user_id})
     return cursor.fetchall()

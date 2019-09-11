@@ -36,7 +36,7 @@ def index(wrong=None):
 
 @app.route('/reg', methods=['GET', 'POST'])
 def registration():
-    username = request.form['username']
+    username = request.form['username'].lower()
     password = password_funct.hash_pass(request.form['password'])
     if username in data_manager_users.get_usernames():
         return redirect(url_for('index', wrong='taken'))
@@ -64,7 +64,7 @@ def logout():
 @app.route('/new/', methods=['GET', 'POST'])
 def pick():
     if 'username' not in session:
-        return redirect('index')
+        return redirect(url_for('index'))
     if request.method == 'GET':
         data_manager.set_pos_def()
     if request.method == 'POST':
@@ -80,19 +80,20 @@ def pick():
 @app.route('/continue/<create>', methods=['GET', 'POST'])
 def continue_(create):
     if 'username' not in session:
-        return redirect('index')
+        return redirect(url_for('index'))
+    user_id = data_manager_users.get_user_id(escape(session['username']))
     if create == 'create':
         new_schedule = background_functions.creat_schedule(data_manager.get_teams('out'))
-        data_manager.creat_league_table_n_schedule(data_manager.get_teams('out'), new_schedule)
-        next_round = background_functions.creat_round(data_manager.get_schedule())
-        data_manager.set_last_round(next_round)
-        last_round = data_manager.get_last_round()
+        data_manager.creat_league_table_n_schedule(data_manager.get_teams('out'), new_schedule, user_id)
+        next_round = background_functions.creat_round(data_manager.get_schedule(user_id))
+        data_manager.set_last_round(next_round, user_id)
+        last_round = data_manager.get_last_round(user_id)
     if create == 'actual_league':
-        last_round = data_manager.get_last_round()
-        next_round = background_functions.creat_round(data_manager.get_schedule())
-        data_manager.set_last_round(next_round)
+        last_round = data_manager.get_last_round(user_id)
+        next_round = background_functions.creat_round(data_manager.get_schedule(user_id))
+        data_manager.set_last_round(next_round, user_id)
     return render_template('continue.html',
-                           league_table=data_manager.get_league_table(),
+                           league_table=data_manager.get_league_table(user_id),
                            next_round=next_round,
                            last_round=last_round,
                            logged_in_as=escape(session['username']))

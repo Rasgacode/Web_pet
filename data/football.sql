@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS football_table, users;
+DROP TABLE IF EXISTS football_table, users, league_table, schedule;
 
 CREATE TABLE football_table (
     id SERIAL PRIMARY KEY,
@@ -8,7 +8,7 @@ CREATE TABLE football_table (
     player_3 character varying(255) NOT NULL,
     team_rating int NOT NULL,
     position character varying(255) DEFAULT 'in'
-);
+    );
 
 INSERT INTO football_table VALUES
     (1,'Real Madrid','Jovic','Hazard','Kubo',88),
@@ -42,5 +42,28 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username varchar(200) NOT NULL,
     password varchar(500) NOT NULL
-);
+    );
 
+CREATE TABLE league_table (
+    user_id int NOT NULL,
+    team_name character varying(255) NOT NULL,
+    played int DEFAULT 0,
+    won int DEFAULT 0,
+    drawn int DEFAULT 0,
+    lost int DEFAULT 0,
+    gf int DEFAULT 0,
+    ga int DEFAULT 0,
+    gd int DEFAULT 0,
+    points int DEFAULT 0
+    );
+
+CREATE TABLE schedule (
+    user_id INT NOT NULL,
+    home character varying(255) NOT NULL,
+    away character varying(255) NOT NULL,
+    played character varying(255) NOT NULL DEFAULT 'no',
+    home_goals int DEFAULT NULL,
+    away_goals int DEFAULT NULL,
+    scorers character varying(255) DEFAULT NULL,
+    last character varying(255) DEFAULT 'notlast'
+    );

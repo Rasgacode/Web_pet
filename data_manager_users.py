@@ -51,6 +51,7 @@ def get_a_pass(cursor, username):
 def get_user_id(cursor, username):
     cursor.execute("""
                     SELECT id FROM users
-                    WHERE username = '{username}'
-                    """).format(username=username)
+                    WHERE username = %(username)s
+                    """, {'username': username})
+    return normalize_output_single_row(cursor.fetchall())['id']
 
