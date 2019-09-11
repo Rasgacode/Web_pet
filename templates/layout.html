@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet " type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}TIPPING{% endblock %}</title>
+</head>
+<body>
+<div id="log_or_not">
+{{ 'You are logged in as ' + logged_in_as if logged_in_as else 'You are not logged in'}}
+</div>
+{% block content %} {% endblock %}
+</body>
+</html>

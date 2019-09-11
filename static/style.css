@@ -1,0 +1,68 @@
+html {
+  background: url("background.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#index_new{
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    z-index: 15;
+    top: 25%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+    font-size: 40px;
+    text-align: center;
+}
+
+#index_new a, #index_con a {
+    color: black;
+    font-family: Ubuntu;
+}
+
+#index_con{
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    z-index: 15;
+    bottom: 10%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+    font-size: 40px;
+    text-align: center;
+}
+
+#registration{
+    position: absolute;
+    top: 5%;
+    right: 10%;
+}
+
+#login{
+    position: absolute;
+    top: 5%;
+    left: 10%;
+}
+
+#taken{
+    color: red;
+    position: absolute;
+    right: 10%;
+    top: 2%;
+}
+
+#wrong{
+    color: red;
+    position: absolute;
+    left: 10%;
+    top: 2%;
+}
+
+#logout{
+    position: absolute;
+    left: 10%;
+    top: 5%;
+}

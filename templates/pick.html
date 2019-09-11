@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    TEAM PICKING
+{% endblock %}
+{% block content %}
+<h1 id="select">Selectable teams</h1>
+<div>
+    <table id="in_table">
+        <tr>
+            <th>TEAM</th>
+            <th>PLAYER_1</th>
+            <th>PLAYER_2</th>
+            <th>PLAYER_3</th>
+        </tr>
+        {% for item in table_in%}
+            <tr>
+                <td>{{ item.team_name }}</td>
+                <td>{{ item.player_1 }}</td>
+                <td>{{ item.player_2 }}</td>
+                <td>{{ item.player_3 }}</td>
+                <td>
+                    <div class="action-button">
+                    <form action="{{ url_for('pick', name=item.team_name) }}", method="POST">
+                        <input type="image" name="pick" src="{{ url_for('static', filename='pick.png') }}" width="20px"/>
+                    </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<h1> Picked teams</h1>
+<div>
+    <table id="out_table">
+        {% for item in table_out %}
+            <tr>
+                <td>
+                    {{ item.team_name }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<form action="{{ url_for('continue_', create='create') }}">
+    <button type="submit">Start league</button>
+</form>
+{% endblock %}

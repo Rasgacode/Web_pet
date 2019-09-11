@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    League
+{% endblock %}
+{% block content %}
+<h1>League table</h1>
+<div>
+    <table>
+        <tr>
+            <th>Team</th><th>Pl</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>P</th>
+        </tr>
+        {% for dicts in league_table %}
+            <tr>
+                {% for item in dicts.values() %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+<h2>Last round</h2>
+<div>
+    {% for team in last_round %}
+        {{ team.home + "-" + team.away }}<br>
+    {% endfor %}
+</div>
+<br>
+<h2>Next round</h2>
+<div>
+    {% for team in next_round %}
+        {{ team.home + "-" + team.away }}<br>
+    {% endfor %}
+</div>
+<br>
+<form action="{{ url_for('continue_', create='actual_league') }}">
+    <button type="submit">Play round</button>
+</form>
+{% endblock %}

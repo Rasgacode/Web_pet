@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    MENU
+{% endblock %}
+
+{% block content %}
+{% if wrong == 'taken' %}
+<div id="taken">
+    <p>Username has already been taken</p>
+</div>
+{% elif wrong == 'wrong' %}
+<div id="wrong">
+    <p>Wrong username or password</p>
+</div>
+{% endif %}
+{% if registration %}
+<div id="login">
+    <form action="{{ login }}" method="POST">
+        <p>Username:</p>
+        <p><input name="username" type="text"></p>
+        <p>Password:</p>
+        <p><input name="password" type="password"></p>
+        <input type="image" name="login" src="{{ url_for('static', filename='login.png') }}" width="50px"/>
+    </form>
+</div>
+<div id="registration">
+    <form action="{{ registration }}" method="POST">
+        <p>Username:</p>
+        <p><input name="username" type="text"></p>
+        <p>Password:</p>
+        <p><input name="password" type="password"></p>
+        <input type="image" name="registration" src="{{ url_for('static', filename='register.png') }}" width="200px"/>
+    </form>
+</div>
+{% endif %}
+{% if new_league %}
+<div id="index_new">
+    <p><a href="{{ new_league }}">New League</a></p>
+</div>
+<div id="index_con">
+    <p><a href="{{ continue_league }}">Continue League</a></p>
+</div>
+<div id="logout">
+    <form action="{{ logout }}">
+        <input type="image" name="logout" src="{{ url_for('static', filename='logout.png') }}" width="100px"/>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
