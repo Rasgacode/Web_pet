@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet " type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <title>{% block title %}TIPPING{% endblock %}</title>
-</head>
-<body>
-<div id="log_or_not">
-{{ 'You are logged in as ' + logged_in_as if logged_in_as else 'You are not logged in'}}
-</div>
-{% block content %} {% endblock %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <script type="text/javascript" src="/static/js/menu.js"></script>
+        <title>{% block title %}TIPPING{% endblock %}</title>
+    </head>
+    <body>
+            {% if wrong == 'taken' %}
+                <div id="taken">
+                    <p>Username has already been taken</p>
+                </div>
+                {% elif wrong == 'wrong' %}
+                <div id="wrong">
+                    <p>Wrong username or password</p>
+                </div>
+            {% endif %}
+            <nav class="nav-main">
+                <div class="btn-toggle-nav" onclick="toggleNav()"></div>
+                <div><a href="{{ url_for('index') }}"><span class="home-img"></span></a></div>
+                {% if logged_in_as %}
+                    <div><a href="{{ logout }}"><span class="logout-img"></span></a> </div>
+                {% endif %}
+                <div class="log_text">
+                {{ 'Your are logged in as ' + logged_in_as if logged_in_as else 'You are not logged in'  }}
+                </div>
+            </nav>
+
+            <aside class="nav-sidebar">
+                <ul>
+                    <li onclick="signInNav()">sign in</li>
+                    <li onclick="regNav()">sign up</li>
+                </ul>
+            </aside>
+            <div class="login-div">
+                <form action="{{ url_for('login') }}" method="POST">
+                    <p>Username:</p>
+                    <p><input name="username" type="text"></p>
+                    <p>Password:</p>
+                    <p><input name="password" type="password"></p>
+                    <p><input type="image" name="login" src="{{ url_for('static', filename='login.png') }}" width="50px"/></p>
+                </form>
+            </div>
+            <div class="registration-div">
+                <form action="{{ url_for('registration') }}" method="POST">
+                    <p>Username:</p>
+                    <p><input name="username" type="text"></p>
+                    <p>Password:</p>
+                    <p><input name="password" type="password"></p>
+                    <p><input type="image" name="registration" src="{{ url_for('static', filename='register.png') }}" width="200px"/></p>
+                </form>
+            </div>
+        {% block content %} {% endblock %}
+    </body>
 </html>

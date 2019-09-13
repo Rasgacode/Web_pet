@@ -25,12 +25,11 @@ def index(wrong=None):
                                new_league=url_for('pick'),
                                continue_league=url_for('continue_', create='actual_league'),
                                logout=url_for('logout'),
-                               logged_in_as=escape(session['username'])
+                               logged_in_as=escape(session['username']),
+                               wrong=wrong
                                )
     return render_template('index.html',
-                           registration=url_for('registration'),
-                           login=url_for('login'),
-                           wrong=wrong,
+                           wrong=wrong
                            )
 
 
@@ -46,7 +45,7 @@ def registration():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form['username']
+    username = request.form['username'].lower()
     if username not in data_manager_users.get_usernames() or len(username) == 0:
         return redirect(url_for('index', wrong='wrong'))
     elif password_funct.verify_pass(request.form['password'], data_manager_users.get_a_pass(username)):
@@ -74,7 +73,8 @@ def pick():
     return render_template('pick.html',
                            table_in=table_in,
                            table_out=table_out,
-                           logged_in_as=escape(session['username']))
+                           logged_in_as=escape(session['username']),
+                           logout=url_for('logout'))
 
 
 @app.route('/continue/<create>', methods=['GET', 'POST'])
@@ -96,7 +96,8 @@ def continue_(create):
                            league_table=data_manager.get_league_table(user_id),
                            next_round=next_round,
                            last_round=last_round,
-                           logged_in_as=escape(session['username']))
+                           logged_in_as=escape(session['username']),
+                           logout=url_for('logout'))
 
 
 if __name__ == '__main__':

@@ -4,14 +4,15 @@
     TEAM PICKING
 {% endblock %}
 {% block content %}
-<h1 id="select">Selectable teams</h1>
-<div>
+
+<div id="selectable">
+    <h1 id="select">Selectable teams</h1>
     <table id="in_table">
         <tr>
             <th>TEAM</th>
-            <th>PLAYER_1</th>
-            <th>PLAYER_2</th>
-            <th>PLAYER_3</th>
+            <th>SCORER I</th>
+            <th>SCORER II</th>
+            <th>SCORER III</th>
         </tr>
         {% for item in table_in%}
             <tr>
@@ -30,19 +31,17 @@
         {% endfor %}
     </table>
 </div>
-<h1> Picked teams</h1>
-<div>
-    <table id="out_table">
-        {% for item in table_out %}
-            <tr>
-                <td>
+<div id="picked">
+    <h1> Picked teams</h1>
+        <ul style="list-style-type: none;">
+            {% for item in table_out %}
+                <li id="list_elem">
                     {{ item.team_name }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+                </li>
+            {% endfor %}
+        </ul>
+    <form action="{{ url_for('continue_', create='create') }}">
+        <input type="image" src="{{ url_for('static', filename='start.png') }}" width="100px"/>
+    </form>
 </div>
-<form action="{{ url_for('continue_', create='create') }}">
-    <button type="submit">Start league</button>
-</form>
 {% endblock %}
